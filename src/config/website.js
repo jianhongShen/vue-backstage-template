@@ -7,7 +7,7 @@ export default {
     menu: {
         iconDefault: 'iconfont icon-caidan',
         props: {
-            label: 'name',
+            title: 'name',
             path: 'path',
             icon: 'source',
             children: 'children'
@@ -16,12 +16,12 @@ export default {
     //配置首页不可关闭
     isFirstPage: false,
     fistPage: {
-        label: "首页",
+        title: "首页",
         path: "/home",
+        name:"Home",
         params: {},
         query: {},
         meta: {},
-        group: [],
         close: false
     },
 }

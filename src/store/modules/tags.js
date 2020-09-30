@@ -1,17 +1,25 @@
+/*
+ * @Author: your name
+ * @Date: 2020-09-18 23:44:47
+ * @LastEditTime: 2020-09-20 23:31:10
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-backstage-template\src\store\modules\tags.js
+ */
 import { setStore, getStore } from '@/utils/store'
 // import { diff } from '@/utils/util'
 import website from '@/config/website'
 
 const isFirstPage = website.isFirstPage;
 const tagWel = website.fistPage;
-const tagObj = {
-    label: '', //标题名称
-    path: '', //标题的路径
-    params: '', //标题的路径参数
-    query: '', //标题的参数
-    meta: {}, //额外参数
-    group: [], //分组
-}
+// const tagObj = {
+//     label: '', //标题名称
+//     path: '', //标题的路径
+//     params: '', //标题的路径参数
+//     query: '', //标题的参数
+//     meta: {}, //额外参数
+//     group: [], //分组
+// }
 
 //处理首个标签
 function setFistTag(list) {
@@ -39,14 +47,13 @@ function findTags(path, list) {
 const navs = {
     state: {
         tagList: getStore({ name: 'tagList' }) || [tagWel],
-        tag: getStore({ name: 'tag' }) || tagObj,
+        tag: getStore({ name: 'tag' }) || tagWel,
         tagWel: tagWel
     },
     mutations: {
         ADD_TAG: (state, action) => {
             state.tag = action;
-            console.log("添加的tag", action)
-            setStore({ name: 'tag', content: state.tag })
+            setStore({ name: 'tag', content: state.tag,type: 'session'})
             if (findTags(state.tag.path, state.tagList)) return
                 //   if (state.tagList.some(ele => diff(ele, action))) return
             state.tagList.push(action)
@@ -55,9 +62,10 @@ const navs = {
         },
         DEL_TAG: (state, action) => {
             state.tagList = state.tagList.filter(item => {
-                return !item.path == action.path;
+                return !(item.path == action.path);
             })
             setFistTag(state.tagList);
+            
             setStore({ name: 'tagList', content: state.tagList, type: 'session' })
         },
         DEL_ALL_TAG: (state) => {
@@ -78,6 +86,10 @@ const navs = {
         SET_TAG_LIST(state, tagList) {
             state.tagList = tagList;
             setStore({ name: 'tagList', content: state.tagList, type: 'session' })
+        },
+        SET_TAG: (state, action) => {
+            console.log("设置的tag值",action)
+            state.tag = action;
         }
     }
 }

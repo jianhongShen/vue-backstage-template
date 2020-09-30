@@ -22,7 +22,6 @@ export default {
     computed:{
         ...mapGetters(["menu"])
     },
-    
 }
 </script>
 

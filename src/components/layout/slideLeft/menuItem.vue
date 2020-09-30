@@ -41,12 +41,11 @@ export default {
     },
     methods:{
         openMenu(item){
-            console.log(item.path)
             this.$router.push({name:item.name})
-            item.label = item.title
             this.$store.commit("ADD_TAG",item)
         }
-    }
+    },
+    
 }
 </script>
 
