@@ -1,0 +1,78 @@
+// const Mock = require('mockjs')
+const menu = [
+    {
+        label: '菜单管理',
+        path: '/menuManage',
+        name:'menuManage',
+        icon: 'icon',
+        children: []
+    },
+    {
+        label: '用户管理',
+        path: '/userManage',
+        name:'userManage',
+        icon: 'icon',
+        children: []
+    },
+    {
+        label: '测试管理',
+        path: '/testManage',
+        name:'testManage',
+        icon: 'icon',
+        children: [{
+            label: '测试子管理',
+            path: '/testManage1',
+            name:'testManage1',
+            icon: 'icon',
+            children: []
+        }]
+    },
+]
+const topMenu = [
+    {
+        label: '移动端',
+        path: '/yidong',
+        icon: 'icon',
+        children: []
+    },
+    {
+        label: 'pc端',
+        path: '/pc',
+        icon: 'icon',
+        children: []
+    },
+]
+const user = {
+    accessToken:""
+};
+export function login (option) {
+    let params = JSON.parse(option.body);
+    user.accessToken = `accessToken-${params.account}`;
+    // console.log("登录信息返回==========>")
+    const resp = {
+        code:200,
+        data:{
+            accessToken:`accessToken-${params.account}`,
+            userInfo:{
+                account:params.account,
+                menu,
+                topMenu,
+            }
+        }
+    }
+    return resp 
+}
+export function getUserInfo () {
+    // let params = JSON.parse(option.body);
+    // console.log("用户信息返回==========>",option)
+    const resp = {
+        code:200,
+        data:{
+            account: user.accessToken.split('-')[1],
+            menu,
+            topMenu,
+            id:"1664005277"
+        }
+    }
+    return resp 
+}
