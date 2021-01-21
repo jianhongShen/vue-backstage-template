@@ -1,5 +1,6 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/user'
 import {setToken, removeToken, getToken} from '@/util/auth'
+import {setStore, getStore} from '@/util/store'
 import router from '../../router'
 
 function addPath(amenu){
@@ -9,9 +10,9 @@ function addPath(amenu){
 const user = {
     state:{
         token:getToken(),
-        userInfo:null,
-        menu:null,
-        topMenu:null
+        userInfo:getStore({name: 'userInfo'}),
+        menu:getStore({name: 'menu'}),
+        topMenu:getStore({name: 'topMenu'})
     },
     actions:{
         //根据用户名登录
@@ -21,8 +22,10 @@ const user = {
                     const data = res.data.data;
                     commit('SET_TOKEN', data.accessToken);
                     commit('SET_USER_INFO', data.userInfo);
+                    //----根据需求是否需要-------
                     commit('SET_MENU', data.userInfo.menu);
                     commit('SET_TOP_MENU', data.userInfo.topMenu);
+                    //--------------------------
                     // commit('DEL_ALL_TAG');
                     resolve(res);
                 }).catch(error => {
@@ -71,16 +74,17 @@ const user = {
         },
         SET_USER_INFO: (state, userInfo) => {
             state.userInfo = userInfo;
-            // state.menu = addPath(userInfo.menu) || []
-            // state.topMenu = addPath(userInfo.topMenu) || []
+            setStore({name: 'userInfo', content: state.userInfo, type: 'session'})
         },
         SET_MENU: (state, menu) => {
             state.menu = addPath(menu)
             console.log("注册菜单")
+            setStore({name: 'menu', content: state.menu, type: 'session'})
             router.$MyRouter.formatRoutes(state.menu,true)
         },
         SET_TOP_MENU: (state, data) => {
             state.topMenu = data
+            setStore({name: 'topMenu', content: state.topMenu, type: 'session'})
         },
     }
 }

@@ -5,8 +5,8 @@
  * isToken是否需要token
  */
 import axios from 'axios'
-import store from '@/store/';
-import router from '@/router/index'
+// import store from '@/store/';
+// import router from '@/router/index'
 import {getToken} from '@/util/auth'
 import {Message} from 'element-ui'
 import website from '@/config/website';
@@ -14,6 +14,10 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 
 const statusWhiteList = website.statusWhiteList || [];
+
+let refreshLock = false;
+let refreshToken = function(){return axios()};
+let requestList = []
 
 axios.defaults.timeout = 10000;
 //返回其他状态吗
@@ -27,7 +31,7 @@ axios.defaults.withCredentials = true;
 axios.interceptors.request.use(config => {
   NProgress.start() // start progress bar
   const meta = (config.meta || {});
-  // console.log(config)
+  console.log(config)
   const isToken = meta.isToken === false;
 //   config.headers['Authorization'] = `Basic ${Base64.encode(`${website.clientId}:${website.clientSecret}`)}`;
   if (getToken() && !isToken) {
@@ -42,11 +46,35 @@ axios.interceptors.response.use(res => {
   NProgress.done();
   const status = res.data.code || 200
   const message = res.data.msg || '未知错误';
+  const config = res.config;
   //如果在白名单里则自行catch逻辑处理
   if (statusWhiteList.includes(status)) return Promise.reject(res);
   //如果是401则无感刷新token
   if (status === 401) {
-      store.dispatch('FedLogOut').then(() => router.push({path: '/login'}));
+      //刷新中
+      if(!refreshLock){
+        refreshLock = true
+        return refreshToken().then(()=>{
+          requestList.forEach((fn)=>{
+            fn()
+          })
+          return axios(config)
+        })
+        .catch(res => {
+          //刷新失败
+          console.error('refreshtoken error =>', res)
+          window.location.href = '/'
+        }).finally(() => {
+          refreshLock = false
+        })
+      }else{
+        return new Promise((resolve)=>{
+          requestList.push(()=>{
+            config.baseURL = ''
+            resolve(axios(config))
+          })
+        })
+      }
     }
   // 如果请求为非200否者默认统一处理
   if (status !== 200) {

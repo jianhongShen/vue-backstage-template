@@ -4,7 +4,7 @@
             <span>
                 <span class="zf-logo-title">
                     <div style="height:100%">
-                        <!-- <img src="@/assets/logo.jpg" width="64" style="vertical-align: middle;"> -->
+                        <img src="@/assets/logo.png" width="64" style="vertical-align: middle;">
                         <span >知否后台管理</span>
                     </div>
                     
