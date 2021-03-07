@@ -55,6 +55,7 @@ export function login (option) {
             accessToken:`accessToken-${params.account}`,
             userInfo:{
                 account:params.account,
+                userName:params.account,
                 menu,
                 topMenu,
             }
@@ -64,15 +65,16 @@ export function login (option) {
 }
 export function getUserInfo () {
     // let params = JSON.parse(option.body);
-    // console.log("用户信息返回==========>",option)
     const resp = {
         code:200,
         data:{
             account: user.accessToken.split('-')[1],
+            userName:user.accessToken.split('-')[1],
             menu,
             topMenu,
             id:"1664005277"
         }
     }
+    console.log("用户信息返回==========>",resp)
     return resp 
 }

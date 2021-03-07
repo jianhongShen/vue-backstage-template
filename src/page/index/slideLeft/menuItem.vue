@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
 export default {
     name:"SidebarItem",
     props: {
@@ -38,6 +39,14 @@ export default {
           type: Object,
           required: true
         }
+    },
+    watch:{
+      tag() {
+          // this.setActive();
+      },
+    },
+    computed:{
+        ...mapGetters(['tag'])
     },
     methods:{
         openMenu(item){

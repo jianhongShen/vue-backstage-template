@@ -31,7 +31,6 @@ axios.defaults.withCredentials = true;
 axios.interceptors.request.use(config => {
   NProgress.start() // start progress bar
   const meta = (config.meta || {});
-  console.log(config)
   const isToken = meta.isToken === false;
 //   config.headers['Authorization'] = `Basic ${Base64.encode(`${website.clientId}:${website.clientSecret}`)}`;
   if (getToken() && !isToken) {
@@ -54,11 +53,11 @@ axios.interceptors.response.use(res => {
       //刷新中
       if(!refreshLock){
         refreshLock = true
-        return refreshToken().then(()=>{
+        refreshToken().then((res)=>{
+          const { token } = res.data
           requestList.forEach((fn)=>{
-            fn()
+            fn(token)
           })
-          return axios(config)
         })
         .catch(res => {
           //刷新失败
@@ -67,14 +66,14 @@ axios.interceptors.response.use(res => {
         }).finally(() => {
           refreshLock = false
         })
-      }else{
-        return new Promise((resolve)=>{
-          requestList.push(()=>{
-            config.baseURL = ''
-            resolve(axios(config))
-          })
-        })
       }
+      return new Promise((resolve)=>{
+        requestList.push((token)=>{
+          config.baseURL = ''
+          config.headers['Blade-Auth'] = token
+          resolve(axios(config))
+        })
+      })
     }
   // 如果请求为非200否者默认统一处理
   if (status !== 200) {

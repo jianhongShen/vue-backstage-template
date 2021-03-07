@@ -77,8 +77,9 @@ export default {
       margin-bottom: 10px;
       box-sizing: border-box;
       overflow: hidden;
-      border-top: 1px solid #f6f6f6;
-      background-color: #fff;
+      border-top: 1px solid $borderColor;
+      background: $bgColor;
+      color: $textColor;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
     &-content{

@@ -84,6 +84,7 @@ export default {
         }
     }
     .el-tabs{
+        height: 40px;
         .el-tabs__nav{
             border:none !important;
         }
@@ -93,12 +94,15 @@ export default {
         } 
     }
     .el-tabs__header {
+        margin:0;
         .el-tabs__item.is-active{
             color: #409EFF;
             border-bottom: 3px solid #409EFF;
         }   
     }
-     
+    .el-tabs__item{
+        color:$textColor;
+    }
 }
 
 </style>

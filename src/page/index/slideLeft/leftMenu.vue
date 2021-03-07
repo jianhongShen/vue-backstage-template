@@ -33,9 +33,22 @@ export default {
     .el-scrollbar{
         .el-scrollbar{
             overflow-y: scroll !important;
+            // &__view{
+            //     .menubar{
+            //         background: $leftMenuBgColor; 
+            //     }
+              
+            // }
         }
     }
     .el-menu{
+        div{
+            background: $leftMenuBgColor !important; 
+            li{
+                background: $leftMenuBgColor !important; 
+            }
+        }
+        
         border-right:none;
         text-align: left;
     }
